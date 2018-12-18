@@ -7,7 +7,7 @@ var connection = mysql.createConnection({
     port: 8889,
     user     : 'root',
     password : 'root',
-    database : 'bamazon_DB'
+    database : 'bamazon_db'
   });
 
   connection.connect(function(err){
@@ -40,17 +40,19 @@ function placeOrder() {
             name: "Quantity"
         }
     ]).then(answers => {
-        console.log(answers);
+        // console.table(answers);
         connection.query('SELECT * FROM products WHERE id=' + answers.ProductID, function (err, res) {
             if (err) throw err;
-            console.log(res);
+            // console.table(res);
             if (answers.Quantity > res[0].stock_quantity) {
                 console.log("Please enter a lower amount of units.");
             } else {
                 var newQuantity = res[0].stock_quantity - answers.Quantity;
                 connection.query('UPDATE products SET stock_quantity =' + newQuantity + ' WHERE id=' + answers.ProductID, function (err, res) {
                     if (err) throw err;
+                    console.log("\n------------");
                     console.log("Order placed.");
+                    console.log("-------------\n");
                     start();
                 });
             }
